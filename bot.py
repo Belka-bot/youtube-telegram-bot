@@ -25,11 +25,11 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.edit_message_text("🎥 Скачиваю видео...")
 
-    ydl_opts = {
+   ydl_opts = {
     'format': 'best',
     'noplaylist': True,
     'quiet': True,
-    'force_ipv4': True  # <-- добавь эту строчку
+    'force_ipv4': True
 }
 
     try:

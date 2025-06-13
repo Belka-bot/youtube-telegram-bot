@@ -21,7 +21,7 @@ TOKEN = os.environ["TOKEN"]
 
 # Функция загрузки видео
 def download_youtube_video(url):
-    ydl_opts = {
+ ydl_opts = {
     'format': 'best',
     'outtmpl': 'video.mp4',
     'noplaylist': True,

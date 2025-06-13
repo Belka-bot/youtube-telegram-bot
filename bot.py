@@ -51,7 +51,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Обработка кнопок (если вдруг появятся в будущем)
 
-async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE): await update.callback_query.answer() await update.callback_query.edit_message_text("Кнопка нажата!")
+async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text("Кнопка нажата!")
 
 # Основная функция запуска
 

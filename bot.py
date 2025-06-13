@@ -10,7 +10,7 @@ from telegram.ext import (
     MessageHandler,
     CallbackQueryHandler,
     ContextTypes,
-    filters
+    filters,
 )
 
 # Включаем логирование
@@ -22,24 +22,22 @@ TOKEN = os.environ["TOKEN"]
 # Функция загрузки видео
 def download_youtube_video(url):
     ydl_opts = {
-        "format": "best",
-        "outtmpl": "video.mp4",
-        "noplaylist": True,
-        "quiet": True,
-        "http_headers": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        'format': 'best',
+        'outtmpl': 'video.mp4',
+        'noplaylist': True,
+        'quiet': True,
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
         }
     }
-
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-
-# Обработка команды /start
+# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, и я его скачаю.")
+    await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, и я скачаю его для тебя.")
 
-# Обработка текстовых сообщений
+# Обработка сообщений
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text
     chat_id = update.effective_chat.id
@@ -47,22 +45,26 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Скачиваю видео...")
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, download_youtube_video, url)
-        await context.bot.send_video(chat_id=chat_id, video=open("video.mp4", "rb"))
+        with open("video.mp4", "rb") as video:
+            await context.bot.send_video(chat_id=chat_id, video=video)
         os.remove("video.mp4")
     except Exception as e:
         await update.message.reply_text(f"Ошибка при скачивании: {e}")
 
-# Обработка кнопок (на будущее)
+# Обработка кнопки (если будет нужна)
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     await update.callback_query.edit_message_text("Кнопка нажата!")
 
-# Основная функция запуска
+# Основная функция
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_callback))
+
     app.run_polling()
 
-main()
+if __name__ == "__main__":
+    main()

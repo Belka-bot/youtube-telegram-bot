@@ -14,15 +14,12 @@ from telegram.ext import (
 )
 
 # Включаем логирование
-
 logging.basicConfig(level=logging.INFO)
 
 # Получаем токен из переменной окружения
-
 TOKEN = os.environ["TOKEN"]
 
 # Функция загрузки видео
-
 def download_youtube_video(url):
     ydl_opts = {
         'format': 'best',
@@ -33,10 +30,11 @@ def download_youtube_video(url):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE): await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, чтобы я скачал его для тебя.")
+# Обработка команды /start
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, и я его скачаю.")
 
 # Обработка текстовых сообщений
-
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text
     chat_id = update.effective_chat.id
@@ -49,12 +47,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"Ошибка при скачивании: {e}")
 
-# Обработка кнопок (если вдруг появятся в будущем)
-
+# Обработка кнопок (на будущее)
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     await update.callback_query.edit_message_text("Кнопка нажата!")
 
+# Основная функция запуска
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
@@ -63,16 +61,3 @@ def main():
     app.run_polling()
 
 main()
-
-# Основная функция запуска
-
-def main(): app = ApplicationBuilder().token(TOKEN).build()
-
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-app.add_handler(CallbackQueryHandler(button_callback))
-
-print("✅ Бот запущен.")
-app.run_polling()
-
-if name == "main": main()

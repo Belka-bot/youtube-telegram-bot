@@ -8,9 +8,9 @@ from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
     MessageHandler,
-    filters,
     CallbackQueryHandler,
     ContextTypes,
+    filters
 )
 
 # Включаем логирование

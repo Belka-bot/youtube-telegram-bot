@@ -3,7 +3,8 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 import yt_dlp
 
-TOKEN = "8043979489:AAEb8ydxUhSlWZpheyXM83vA_Qc0T8U25Uw"
+TOKEN = 
+"8043979489:AAEb8ydxUhSlWZpheyXM83vA_Qc0T8U25Uw"
 
 def is_youtube_url(text):
     return 'youtube.com/watch' in text or 'youtu.be/' in text

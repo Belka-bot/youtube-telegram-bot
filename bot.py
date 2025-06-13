@@ -23,9 +23,15 @@ TOKEN = os.environ["TOKEN"]
 
 # Функция загрузки видео
 
-def download_youtube_video(url): ydl_opts = { 'format': 'best', 'outtmpl': 'video.mp4', 'noplaylist': True, 'quiet': True } with yt_dlp.YoutubeDL(ydl_opts) as ydl: ydl.download([url])
-
-# Обработка команды /start
+def download_youtube_video(url):
+    ydl_opts = {
+        'format': 'best',
+        'outtmpl': 'video.mp4',
+        'noplaylist': True,
+        'quiet': True
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE): await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, чтобы я скачал его для тебя.")
 

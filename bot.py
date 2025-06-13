@@ -1,4 +1,17 @@
-import os import logging import yt_dlp import asyncio from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton from telegram.ext import ( ApplicationBuilder, CommandHandler, MessageHandler, filters, CallbackQueryHandler, ContextTypes )
+import os
+import logging
+import yt_dlp
+import asyncio
+
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    MessageHandler,
+    filters,
+    CallbackQueryHandler,
+    ContextTypes,
+)
 
 Включаем логирование
 

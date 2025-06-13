@@ -17,7 +17,7 @@ from telegram.ext import (
 logging.basicConfig(level=logging.INFO)
 
 # Получаем токен из переменной окружения
-TOKEN = os.environ["8043979489:AAGwqFfrYIvYnYh7Nywd_CmcnHforKHoT9c"]
+TOKEN = os.environ["TOKEN"]
 
 # Функция загрузки видео
 def download_youtube_video(url):

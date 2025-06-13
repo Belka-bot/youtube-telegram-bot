@@ -37,7 +37,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE): await updat
 
 # Обработка текстовых сообщений
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE): url = update.message.text chat_id = update.effective_chat.id try: await update.message.reply_text("Скачиваю видео...") loop = asyncio.get_event_loop() await loop.run_in_executor(None, download_youtube_video, url) await context.bot.send_video(chat_id=chat_id, video=open("video.mp4", "rb")) os.remove("video.mp4") except Exception as e: await update.message.reply_text(f"Ошибка при скачивании: {e}")
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    url = update.message.text
+    chat_id = update.effective_chat.id
+    try:
+        await update.message.reply_text("Скачиваю видео...")
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, download_youtube_video, url)
+        await context.bot.send_video(chat_id=chat_id, video=open("video.mp4", "rb"))
+        os.remove("video.mp4")
+    except Exception as e:
+        await update.message.reply_text(f"Ошибка при скачивании: {e}")
 
 # Обработка кнопок (если вдруг появятся в будущем)
 

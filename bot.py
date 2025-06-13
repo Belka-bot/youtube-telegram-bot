@@ -10,18 +10,22 @@ def is_youtube_url(text):
     return 'youtube.com/watch' in text or 'youtu.be/' in text
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_text = update.message.text
-    if is_youtube_url(message_text):
-        keyboard = [
-            [InlineKeyboardButton("🔽 Скачать видео", callback_data=message_text)]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text("Видео обнаружено. Нажми кнопку для скачивания:", reply_markup=reply_markup)
+    url = update.message.text
 
-async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    url = query.data
+    ydl_opts = {
+        'format': 'best',
+        'noplaylist': True,
+        'quiet': True,
+        'force_ipv4': True
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+            await context.bot.send_video(
+                chat_id=update.effective_chat.id,
+                video=open('video.mp4', 'rb')
+            )
 
     await query.edit_message_text("🎥 Скачиваю видео...")
 

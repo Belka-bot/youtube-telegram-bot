@@ -23,6 +23,7 @@ def download_youtube_video(url):
     ydl_opts = {
         'format': 'best',
         'outtmpl': 'video.mp4',
+       'merge_output_format' : 'mp4' ,
         'noplaylist': True,
         'quiet': True,
         'http_headers': {

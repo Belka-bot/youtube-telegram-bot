@@ -13,31 +13,31 @@ from telegram.ext import (
     ContextTypes,
 )
 
-Включаем логирование
+# Включаем логирование
 
 logging.basicConfig(level=logging.INFO)
 
-Получаем токен из переменной окружения
+# Получаем токен из переменной окружения
 
 TOKEN = os.environ["TOKEN"]
 
-Функция загрузки видео
+# Функция загрузки видео
 
 def download_youtube_video(url): ydl_opts = { 'format': 'best', 'outtmpl': 'video.mp4', 'noplaylist': True, 'quiet': True } with yt_dlp.YoutubeDL(ydl_opts) as ydl: ydl.download([url])
 
-Обработка команды /start
+# Обработка команды /start
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE): await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, чтобы я скачал его для тебя.")
 
-Обработка текстовых сообщений
+# Обработка текстовых сообщений
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE): url = update.message.text chat_id = update.effective_chat.id try: await update.message.reply_text("Скачиваю видео...") loop = asyncio.get_event_loop() await loop.run_in_executor(None, download_youtube_video, url) await context.bot.send_video(chat_id=chat_id, video=open("video.mp4", "rb")) os.remove("video.mp4") except Exception as e: await update.message.reply_text(f"Ошибка при скачивании: {e}")
 
-Обработка кнопок (если вдруг появятся в будущем)
+# Обработка кнопок (если вдруг появятся в будущем)
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE): await update.callback_query.answer() await update.callback_query.edit_message_text("Кнопка нажата!")
 
-Основная функция запуска
+# Основная функция запуска
 
 def main(): app = ApplicationBuilder().token(TOKEN).build()
 

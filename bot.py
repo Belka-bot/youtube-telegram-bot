@@ -26,11 +26,11 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.edit_message_text("🎥 Скачиваю видео...")
 
     ydl_opts = {
-        'format': 'best[ext=mp4]/best',
-        'outtmpl': 'video.mp4',
-        'noplaylist': True,
-        'quiet': True,
-    }
+    'format': 'best',
+    'noplaylist': True,
+    'quiet': True,
+    'force_ipv4': True  # <-- добавь эту строчку
+}
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:

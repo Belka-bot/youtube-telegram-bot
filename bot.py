@@ -2,69 +2,52 @@ import os
 import logging
 import yt_dlp
 import asyncio
+from telegram import Update
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import (
-    ApplicationBuilder,
-    CommandHandler,
-    MessageHandler,
-    CallbackQueryHandler,
-    ContextTypes,
-    filters,
-)
-
-# Включаем логирование
+# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
-# Получаем токен из переменной окружения
+# Получаем токен
 TOKEN = os.environ["TOKEN"]
 
-# Функция загрузки видео
-def download_youtube_video(url):
+# Функция загрузки
+def download_video(url):
     ydl_opts = {
         'format': 'best',
         'outtmpl': 'video.mp4',
         'noplaylist': True,
         'quiet': True,
         'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-        }
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        },
+        # Если понадобится — раскомментируй и подставь свой proxy:
+        # 'proxy': 'socks5://user:pass@host:port',
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-# Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Привет! Отправь ссылку на YouTube-видео, и я скачаю его для тебя.")
+    await update.message.reply_text("Привет! Отправь ссылку на видео — я постараюсь её скачать.")
 
-# Обработка сообщений
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    url = update.message.text
+    url = update.message.text.strip()
     chat_id = update.effective_chat.id
+    await update.message.reply_text("Скачиваю видео…")
+    loop = asyncio.get_event_loop()
     try:
-        await update.message.reply_text("Скачиваю видео...")
-        loop = asyncio.get_event_loop()
-        await loop.run_in_executor(None, download_youtube_video, url)
-        with open("video.mp4", "rb") as video:
-            await context.bot.send_video(chat_id=chat_id, video=video)
+        await loop.run_in_executor(None, download_video, url)
+        with open("video.mp4", "rb") as f:
+            await context.bot.send_video(chat_id=chat_id, video=f)
         os.remove("video.mp4")
     except Exception as e:
         await update.message.reply_text(f"Ошибка при скачивании: {e}")
 
-# Обработка кнопки (если будет нужна)
-async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.callback_query.answer()
-    await update.callback_query.edit_message_text("Кнопка нажата!")
-
-# Основная функция
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
-
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    app.add_handler(CallbackQueryHandler(button_callback))
-
     app.run_polling()
 
-if __name__ == "__main__":
+if name == "main":
     main()

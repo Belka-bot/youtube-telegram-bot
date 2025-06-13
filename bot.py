@@ -55,6 +55,15 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.callback_query.answer()
     await update.callback_query.edit_message_text("Кнопка нажата!")
 
+def main():
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(button_callback))
+    app.run_polling()
+
+main()
+
 # Основная функция запуска
 
 def main(): app = ApplicationBuilder().token(TOKEN).build()

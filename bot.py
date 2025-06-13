@@ -21,13 +21,14 @@ TOKEN = os.environ["TOKEN"]
 # Функция загрузки видео
 def download_youtube_video(url):
     ydl_opts = {
-        "format": "best",
-        "outtmpl": "video.mp4",
-        "noplaylist": True,
-        "quiet": True,
-        "http_headers": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        }
+        'format': 'best',
+        'outtmpl': 'video.mp4',
+        'noplaylist': True,
+        'quiet': True,
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        },
+        'cookiefile': 'cookies.txt',  # ← Вот это добавь
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
